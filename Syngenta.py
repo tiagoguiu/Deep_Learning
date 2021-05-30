@@ -7,6 +7,8 @@ pixels = list(image.getdata())
 tam2 = pixels.index(51) #procurando o verde dentro da imagem pelo index RGB
 print(tam2) #QUANTIDADE TOTAL DE PONTOS VERDES 481
 
+color = image.getcolors
+print(color)
 #DEIXAREI COMENTADO O QUE EU TENTEI FAZER
 
 #print(tam)
@@ -20,11 +22,3 @@ print(tam2) #QUANTIDADE TOTAL DE PONTOS VERDES 481
 #print(image.format) #BMP
 #print(image.mode) #P 
 
-#SEGUNDA PARTE DA ATIVIDADE
-
-
-
-thresh = 200
-fn = lambda x : 255 if x > thresh else 0
-r = image.convert('L').point(fn, mode='1')#nada achado em transformado tudo em branco
-r.show()
