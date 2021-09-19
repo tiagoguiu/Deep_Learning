@@ -1,9 +1,6 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow import keras
-#O primeiro exemplo de utilização do TensorFlow é aproximar uma função matemática conhecida, a partir de pares (x,y).
-
-#A função é dada por: y = 2x -1
 
 model = tf.keras.Sequential([keras.layers.Dense(units=1, input_shape=[1])])
 
