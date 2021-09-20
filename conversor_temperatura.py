@@ -9,8 +9,8 @@ model.compile(optimizer='sgd', loss='mean_squared_error')
 xs = np.array([0.0,  0.5 , 1.0, 2.0, 3.0, 4.0], dtype=float)
 ys = np.array([3.2, 4.1, 5.0, 6.8, 8.6, 10.4], dtype=float)
 
-model.fit(xs, ys, epochs=500)
+model.fit(xs, ys, epochs=1000)
 
-print(model.predict([38]))
+print(model.predict([3.8]))
 
-#resultado [[72.3974]]
+#resultado [[10.041024]]
