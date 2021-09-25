@@ -14,19 +14,10 @@ training_images=training_images/255.0
 test_images=test_images/255.0
 model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(),
-  tf.keras.layers.Dense(8192, activation=tf.nn.relu),
-  tf.keras.layers.Dense(4096, activation=tf.nn.relu),
-  tf.keras.layers.Dense(2048, activation=tf.nn.relu),
-  tf.keras.layers.Dense(1024, activation=tf.nn.relu),
   tf.keras.layers.Dense(512, activation=tf.nn.relu),
-  tf.keras.layers.Dense(256, activation=tf.nn.relu),
   tf.keras.layers.Dense(128, activation=tf.nn.relu),
-  tf.keras.layers.Dense(64, activation=tf.nn.relu),
-  tf.keras.layers.Dense(32, activation=tf.nn.relu),
   tf.keras.layers.Dense(16, activation=tf.nn.relu),
-  tf.keras.layers.Dense(8, activation=tf.nn.relu),
-  tf.keras.layers.Dense(4, activation=tf.nn.relu),
-  tf.keras.layers.Dense(2, activation=tf.nn.relu),
+
   tf.keras.layers.Dense(10, activation=tf.nn.softmax)
 ])
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
@@ -39,3 +30,6 @@ classifications = model.predict(test_images)
 print(classifications[0])
 
 print(test_labels[0])
+
+# A acuracia geral foi de 88%, a maior foi 91% foi o maior que consegui
+# Testei varias combinações de multiplas camadas, e com muitos neuronios, mas meu melhor resultado foi esse
