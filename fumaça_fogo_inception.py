@@ -38,8 +38,17 @@ zip_ref.close()
 !ln - sf "/tmp/FIRE-SMOKE-DATASET/Train/Smoke" "/tmp/N-S/Train/Smoke"
 !ln - sf "/tmp/FIRE-SMOKE-DATASET/Test/Smoke" "/tmp/N-S/Test/Smoke"
 
+pre_trained_model = InceptionV3(input_shape=(
+    150, 150, 3), include_top=False, weights=None)
+
 base_dir = '/tmp/fire-smoke'
 
+pre_trained_model.load_weights(base_dir)
+for layer in pre_trained_model.layers:
+    layer.trainable = False
+last_layer = pre_trained_model.get_layer('mixed7')
+print('last layer output shape: ', last_layer.output_shape)
+last_output = last_layer.output
 
 train_dir = os.path.join(base_dir, 'train')
 validation_dir = os.path.join(base_dir, 'validation')
@@ -49,6 +58,16 @@ train_smoke_dir = os.path.join(train_dir, 'smoke')
 
 validation_fire_dir = os.path.join(validation_dir, 'fire')
 validation_smoke_dir = os.path.join(validation_dir, 'smoke')
+
+x = layers.Flatten()(last_output)
+x = layers.Dense(1024, activation='relu')(x)
+x = layers.Dropout(0.2)(x)
+x = layers.Dense(1, activation='sigmoid')(x)
+
+model = Model(pre_trained_model.input, x)
+
+model.compile(optimizer=RMSprop(lr=0.0001),
+              loss='binary_crossentropy', metrics=['accuracy'])
 
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu',
@@ -69,7 +88,13 @@ model = tf.keras.models.Sequential([
 model.compile(optimizer=RMSprop(learning_rate=0.001),
               loss='binary_crossentropy', metrics=['accuracy'])
 
-train_datagen = ImageDataGenerator(rescale=1.0/255.)
+train_datagen = ImageDataGenerator(rescale=1./255.,
+                                   rotation_range=40,
+                                   width_shift_range=0.2,
+                                   height_shift_range=0.2,
+                                   shear_range=0.2,
+                                   zoom_range=0.2,
+                                   horizontal_flip=True)
 test_datagen = ImageDataGenerator(rescale=1.0/255.)
 
 train_generator = train_datagen.flow_from_directory(
@@ -79,4 +104,4 @@ validation_generator = test_datagen.flow_from_directory(
     validation_dir, batch_size=20, class_mode='binary', target_size=(150, 150))
 
 history = model.fit(train_generator, validation_data=validation_generator,
-                    steps_per_epoch=100, epochs=15, validation_steps=50, verbose=2)
+                    steps_per_epoch=100, epochs=20, validation_steps=50, verbose=2)
